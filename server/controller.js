@@ -40,7 +40,7 @@ module.exports = {
     console.log(`login was fired`)
     const db = req.app.get('db')
     const { session } = req
-    const { loginUsername: username } = req.body
+    const { loginUserName: username } = req.body
     try {
       let user = await db.login({ username })
       session.user = user[0]
