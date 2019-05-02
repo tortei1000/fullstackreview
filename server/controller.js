@@ -45,6 +45,7 @@ module.exports = {
       let user = await db.login({ username })
       session.user = user[0]
       const authenticated = bcrypt.compareSync(req.body.loginPassword, user[0].password)
+      console.log(authenticated)
       if (authenticated) {
         res.status(200).send({ authenticated, user_id: user[0].login_id })
       } else {
@@ -53,6 +54,26 @@ module.exports = {
     } catch (err) {
       res.sendStatus(401)
     }
+  },
+
+  getDetails: async (req, res) => {
+    console.log(`get details was fired`)
+    const db = req.app.get('db')
+    const {session} = req
+    try {
+      console.log(session.user)
+      const {login_id: id} = session.user 
+      const data = await db.get_user_details({id})
+      res.status(200).send(data[0])
+    } catch(err) {
+      res.sendStatus(500)
+    }
+  },
+
+  logout:  (req, res) => {
+    console.log(`logout was fired`)
+    req.session.destroy()
+    res.sendStatus(200)
   }
 
 }
